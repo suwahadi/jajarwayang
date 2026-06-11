@@ -15,9 +15,11 @@ class SettingSeeder extends Seeder
             'site_name' => 'CV. Jajar Wayang',
             'site_tagline' => 'Produk & Peralatan CNC Presisi',
             'site_email' => 'jajarwayang25@gmail.com',
-            'site_phone' => '085892159266',
+            'site_phone1' => '0812-9805-3529',
+            'site_phone2' => '0858-9215-9266',
+            'site_whatsapp' => '0812-9805-3529', // Nomor utama: tombol info produk "Call" & floating WhatsApp
             'site_address' => 'Perum Rajeg Asri RT 16/02, Ds Rajeg, Kec. Rajeg, Kab. Tangerang, Banten',
-            'origin_district_id' => '73468', // ID destinasi gudang (Komerce) untuk RajaOngkir
+            'origin_district_id' => '73642', // ID destinasi gudang (Komerce): TANAH MERAH, SEPATAN TIMUR, TANGERANG, BANTEN, 15520
             'free_shipping_min' => '0',
             'expiry_order' => '15', // Menit sebelum order kedaluwarsa (otomatis dibatalkan)
         ];

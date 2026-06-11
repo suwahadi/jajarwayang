@@ -32,6 +32,55 @@ if (! function_exists('order_expiry_minutes')) {
     }
 }
 
+if (! function_exists('phone_intl_digits')) {
+    /**
+     * Normalisasi nomor telepon lokal ("0812-9805-3529") menjadi digit
+     * internasional tanpa plus ("6281298053529"). String kosong bila kosong.
+     */
+    function phone_intl_digits(?string $number): string
+    {
+        $digits = (string) preg_replace('/[^0-9]/', '', (string) $number);
+
+        if ($digits === '') {
+            return '';
+        }
+
+        return str_starts_with($digits, '0') ? '62'.substr($digits, 1) : $digits;
+    }
+}
+
+if (! function_exists('tel_href')) {
+    /**
+     * Tautan telepon "tel:+62xxx" dari nomor format lokal; null bila kosong.
+     */
+    function tel_href(?string $number): ?string
+    {
+        $digits = phone_intl_digits($number);
+
+        return $digits === '' ? null : 'tel:+'.$digits;
+    }
+}
+
+if (! function_exists('wa_href')) {
+    /**
+     * Tautan WhatsApp "https://wa.me/62xxx?text=..." dari setting `site_whatsapp`
+     * (nomor utama: tombol info produk "Call" & floating button). Auto-text wajib
+     * disertakan — tanpa argumen memakai sapaan umum. Null bila nomor belum diisi.
+     */
+    function wa_href(?string $text = null): ?string
+    {
+        $digits = phone_intl_digits((string) setting('site_whatsapp', ''));
+
+        if ($digits === '') {
+            return null;
+        }
+
+        $text ??= 'Halo, saya ingin bertanya tentang produk '.setting('site_name', 'CV. Jajar Wayang').'.';
+
+        return 'https://wa.me/'.$digits.'?text='.rawurlencode($text);
+    }
+}
+
 if (! function_exists('rupiah')) {
     /**
      * Format nominal rupiah sesuai PRD §4.2: "Rp 521.000" (tanpa desimal).

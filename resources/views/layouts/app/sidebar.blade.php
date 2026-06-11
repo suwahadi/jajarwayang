@@ -1,8 +1,6 @@
 @php
-    // Nomor WhatsApp untuk tautan "Bantuan" (sinkron dgn logika footer storefront).
-    $waNumber = preg_replace('/[^0-9]/', '', (string) setting('site_phone', ''));
-    $waNumber = $waNumber !== '' ? (str_starts_with($waNumber, '0') ? '62'.substr($waNumber, 1) : $waNumber) : '';
-    $waLink = $waNumber !== '' ? 'https://wa.me/'.$waNumber : null;
+    // Nomor WhatsApp untuk tautan "Bantuan" (setting `site_whatsapp` + auto-text).
+    $waLink = wa_href('Halo, saya butuh bantuan terkait akun/pesanan saya.');
 @endphp
 
 <!DOCTYPE html>

@@ -182,10 +182,8 @@ new #[Layout('layouts::storefront')] class extends Component
             {{-- Callout stok (disembunyikan untuk produk "Call") --}}
             @if ($this->price <= 0)
                 @php
-                    $waNumber = preg_replace('/[^0-9]/', '', (string) setting('site_phone', ''));
-                    $waLink = $waNumber !== ''
-                        ? 'https://wa.me/'.$waNumber.'?text='.rawurlencode('Halo, saya tertarik dengan produk: '.$product->name.' (SKU: '.$this->sku.')')
-                        : null;
+                    // Tombol info produk "Call": WhatsApp dari setting `site_whatsapp`.
+                    $waLink = wa_href('Halo, saya tertarik dengan produk: '.$product->name.' (SKU: '.$this->sku.')');
                 @endphp
                 <div class="mt-6">
                     @if ($waLink)

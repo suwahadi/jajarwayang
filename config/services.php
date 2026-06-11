@@ -40,13 +40,12 @@ return [
     | RajaOngkir (Tipe PRO / District) — PRD §7.1
     |--------------------------------------------------------------------------
     | Base URL diabstraksikan agar mudah dialihkan ke endpoint Komerce yang
-    | menggantikan pro.rajaongkir.com. `origin_district` adalah ID kecamatan
-    | gudang CV. Jajar Wayang sebagai titik asal pengiriman.
+    | menggantikan pro.rajaongkir.com. ID kecamatan asal gudang TIDAK di sini —
+    | dikelola via setting `origin_district_id` (tabel `settings`, halaman admin).
     */
     'rajaongkir' => [
         'key' => env('RAJAONGKIR_API_KEY'),
         'base_url' => env('RAJAONGKIR_BASE_URL', 'https://pro.rajaongkir.com/api'),
-        'origin_district' => env('RAJAONGKIR_ORIGIN_DISTRICT'),
         // Aktifkan driver mock saat API key kosong agar checkout dapat diuji lokal.
         'mock' => env('RAJAONGKIR_MOCK', false),
     ],

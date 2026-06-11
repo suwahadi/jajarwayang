@@ -15,7 +15,9 @@ use Illuminate\Support\Facades\Log;
  * API gratis Komerce TIDAK menyediakan cascade provinsi/kota/kecamatan;
  * sebagai gantinya memakai satu endpoint pencarian destinasi (subdistrict)
  * yang mengembalikan `id` + `label` lengkap, lalu kalkulasi ongkir memakai
- * id tersebut. Base URL & origin diambil dari config agar fleksibel.
+ * id tersebut. Base URL & API key diambil dari config; titik asal gudang
+ * dibaca dari setting `origin_district_id` (tabel `settings`) agar dapat
+ * diubah admin tanpa menyentuh `.env`.
  *
  * Endpoint:
  *  - GET  {base}/destination/domestic-destination?search=&limit=&offset=
@@ -78,7 +80,8 @@ class ShippingService
     {
         $this->baseUrl = rtrim((string) config('services.rajaongkir.base_url'), '/');
         $this->apiKey = config('services.rajaongkir.key');
-        $this->origin = config('services.rajaongkir.origin_district');
+        $origin = setting('origin_district_id');
+        $this->origin = blank($origin) ? null : (string) $origin;
         $this->mock = (bool) config('services.rajaongkir.mock') || blank($this->apiKey);
     }
 

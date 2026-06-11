@@ -12,9 +12,7 @@
         : '<b>CV. Jajar Wayang</b> adalah penyedia global terpercaya untuk suku cadang CNC, peralatan mesin pengolahan kayu, aksesori, serta suku cadang otomatisasi industri. Kami berkomitmen pada garansi orisinalitas dan solusi yang meminimalisir downtime mesin Anda.';
 
     $siteName = setting('site_name', 'CV. Jajar Wayang');
-    $waNumber = preg_replace('/[^0-9]/', '', (string) setting('site_phone', ''));
-    $waNumber = $waNumber !== '' ? (str_starts_with($waNumber, '0') ? '62'.substr($waNumber, 1) : $waNumber) : '';
-    $waLink = $waNumber !== '' ? 'https://wa.me/'.$waNumber : '#';
+    $waLink = wa_href() ?? '#'; // wa.me dari setting `site_whatsapp` + auto-text sapaan umum
 
     $activeCategory = request()->routeIs('products.index') ? request('category') : null;
 @endphp
@@ -208,14 +206,14 @@
                                 <a href="mailto:{{ setting('site_email') }}" class="font-mono hover:text-amber-600">{{ setting('site_email') }}</a>
                             </li>
                         @endif
-                        @if (setting('site_phone'))
-                            <li class="flex items-center gap-2.5">
-                                <span class="grid size-4 shrink-0 place-items-center text-amber-600">
-                                    <flux:icon.whatsapp class="size-[13px]" />
-                                </span>
-                                <a href="{{ $waLink }}" target="_blank" rel="noopener" class="font-mono hover:text-amber-600">{{ setting('site_phone') }}</a>
-                            </li>
-                        @endif
+                        @foreach (['site_phone1', 'site_phone2'] as $phoneKey)
+                            @if (setting($phoneKey))
+                                <li class="flex items-center gap-2.5">
+                                    <flux:icon.phone class="size-4 shrink-0 text-amber-600" />
+                                    <a href="{{ tel_href(setting($phoneKey)) }}" target="_blank" class="font-mono hover:text-amber-600">{{ setting($phoneKey) }}</a>
+                                </li>
+                            @endif
+                        @endforeach
                         <li class="flex items-center gap-2.5">
                             <flux:icon.globe-alt class="size-4 shrink-0 text-amber-600" />
                             <a href="{{ config('app.url') }}" target="_blank" rel="noopener" class="font-mono hover:text-amber-600">{{ preg_replace('#^https?://#', '', (string) config('app.url')) }}</a>

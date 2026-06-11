@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Exceptions\BusinessRuleException;
 use App\Services\ShippingService;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
@@ -16,8 +18,11 @@ class ShippingServiceTest extends TestCase
 
         config()->set('services.rajaongkir.base_url', 'https://api.test/v1');
         config()->set('services.rajaongkir.key', 'dummy-key');
-        config()->set('services.rajaongkir.origin_district', '17673');
         config()->set('services.rajaongkir.mock', false);
+
+        // Origin gudang kini dibaca dari setting `origin_district_id`;
+        // pre-warm cache (prefix SettingService) agar tidak menyentuh DB.
+        Cache::forever('setting.origin_district_id', '17673');
     }
 
     public function test_pencarian_destinasi_dipetakan(): void
@@ -98,6 +103,18 @@ class ShippingServiceTest extends TestCase
         $this->assertSame('REG', $first[0]['service']);
         $this->assertSame($first, $second);
         Http::assertSentCount(1);
+        Http::assertSent(fn ($request): bool => $request['origin'] === '17673');
+    }
+
+    public function test_origin_belum_dikonfigurasi_melempar_exception(): void
+    {
+        // String kosong (bukan null) agar tetap terbaca sebagai cache hit tanpa DB.
+        Cache::forever('setting.origin_district_id', '');
+        Http::fake();
+
+        $this->expectException(BusinessRuleException::class);
+
+        (new ShippingService)->cost(54102, 1000, 'jne');
     }
 
     public function test_mode_mock_tidak_memanggil_api(): void

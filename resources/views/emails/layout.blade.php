@@ -13,7 +13,8 @@
 @php
     $siteName = setting('site_name', config('services.brevo.sender_name', 'CV. Jajar Wayang'));
     $siteEmail = setting('site_email', config('services.brevo.sender_email'));
-    $sitePhone = setting('site_phone');
+    // Gabungkan dua nomor kontak (site_phone1/2) — tampil "0812… / 0858…".
+    $sitePhone = implode(' / ', array_filter([setting('site_phone1'), setting('site_phone2')]));
     $siteAddress = setting('site_address');
     // $accent/$ink/$muted/$line dibagikan via View::composer('emails.*') di
     // AppServiceProvider agar tersedia juga di @section & partial.
@@ -59,7 +60,7 @@
                         <td style="background-color:#ffffff; border-top:1px solid {{ $line }}; border-radius:0 0 8px 8px; padding:20px 28px;">
                             <p style="margin:0 0 6px; font-size:12px; line-height:1.6; color:{{ $muted }};">
                                 @if ($siteAddress){{ $siteAddress }}<br>@endif
-                                @if ($sitePhone)Telp/WA: {{ $sitePhone }}@if ($siteEmail) &middot; @endif @endif
+                                @if ($sitePhone !== '')Telp: {{ $sitePhone }}@if ($siteEmail) &middot; @endif @endif
                                 @if ($siteEmail)<a href="mailto:{{ $siteEmail }}" style="color:{{ $accent }}; text-decoration:none;">{{ $siteEmail }}</a>@endif
                             </p>
                             <p style="margin:0; font-size:11px; color:#94a3b8;">

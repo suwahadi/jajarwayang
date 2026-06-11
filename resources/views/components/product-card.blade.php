@@ -17,12 +17,8 @@
     $wished = app(\App\Services\WishlistService::class)->has($product->id);
     $isCall = $product->fromPrice() <= 0;
 
-    // Produk "Call": tombol mengarah langsung ke WhatsApp untuk penawaran harga.
-    $waNumber = preg_replace('/[^0-9]/', '', (string) setting('site_phone', ''));
-    $waNumber = $waNumber !== '' ? (str_starts_with($waNumber, '0') ? '62'.substr($waNumber, 1) : $waNumber) : '';
-    $waLink = $waNumber !== ''
-        ? 'https://wa.me/'.$waNumber.'?text='.rawurlencode('Halo, saya tertarik dengan produk: '.$product->name.' (SKU: '.$product->sku.')')
-        : null;
+    // Produk "Call": tombol mengarah langsung ke WhatsApp (setting `site_whatsapp`).
+    $waLink = wa_href('Halo, saya tertarik dengan produk: '.$product->name.' (SKU: '.$product->sku.')');
 
     $discount = 0;
     if ($onPromo && ! $hasVariants && $product->original_price > 0) {
