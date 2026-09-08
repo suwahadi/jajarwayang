@@ -32,7 +32,7 @@
                 </flux:sidebar.group>
 
                 <flux:sidebar.group :heading="__('Akun')" class="grid">
-                    <flux:sidebar.item icon="cog-6-tooth" :href="route('profile.edit')" :current="request()->routeIs('profile.*', 'security.*', 'appearance.*')" wire:navigate>
+                    <flux:sidebar.item icon="cog-6-tooth" :href="route('profile.edit')" :current="request()->routeIs('profile.*', 'security.*')" wire:navigate>
                         {{ __('Pengaturan Akun') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>

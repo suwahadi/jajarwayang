@@ -6,7 +6,10 @@
 @source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
 @source '../../vendor/livewire/flux/stubs/**/*.blade.php';
 
-@custom-variant dark (&:where(.dark, .dark *));
+/* Dark mode dimatikan sepenuhnya (lihat partials/head.blade.php: @fluxAppearance dihapus).
+   Selector ini sengaja tidak pernah cocok, jadi seluruh utility `dark:` di blade mati
+   tanpa perlu menghapusnya satu per satu. */
+@custom-variant dark (&:where(.dark-mode-disabled));
 
 @theme {
     /* PRD §8: Inter untuk teks, Roboto Mono untuk angka teknis (harga, SKU, dimensi). */
@@ -31,15 +34,13 @@
     --color-accent-foreground: var(--color-white);
 }
 
-@layer theme {
-    .dark {
-        --color-accent: var(--color-amber-500);
-        --color-accent-content: var(--color-amber-500);
-        --color-accent-foreground: var(--color-slate-900);
-    }
-}
-
 @layer base {
+
+    /* Kunci widget native (select, input, radio, scrollbar) ke skema terang,
+       walau OS/browser pengguna memakai dark mode. */
+    :root {
+        color-scheme: light;
+    }
 
     *,
     ::after,
