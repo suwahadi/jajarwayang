@@ -5,11 +5,13 @@
     $navCategories = Category::query()->where('is_active', true)->orderBy('name')->get();
     $footerPages = Page::query()->where('is_active', true)->orderBy('created_at', 'asc')->get();
 
-    // Paragraf pertama halaman "Tentang Kami" untuk ringkasan footer (pakai fallback bila kosong).
+    // Kalimat pertama dari paragraf pertama halaman "Tentang Kami" untuk ringkasan footer (pakai fallback bila kosong).
     $aboutPage = Page::query()->where('slug', 'tentang-kami')->where('is_active', true)->first();
     $aboutExcerpt = ($aboutPage && preg_match('/<p[^>]*>(.*?)<\/p>/is', (string) $aboutPage->content, $m) && trim(strip_tags($m[1])) !== '')
-        ? trim($m[1])
+        ? strip_tags(trim($m[1]), '<strong><b><em><i>')
         : '<b>CV. Jajar Wayang</b> adalah penyedia global terpercaya untuk suku cadang CNC, peralatan mesin pengolahan kayu, aksesori, serta suku cadang otomatisasi industri. Kami berkomitmen pada garansi orisinalitas dan solusi yang meminimalisir downtime mesin Anda.';
+    // Titik pada singkatan badan usaha ("CV.", "PT.") bukan akhir kalimat.
+    $aboutExcerpt = preg_match('/^.*?(?<!\bCV|\bPT)\.(?=\s|$)/su', $aboutExcerpt, $s) ? $s[0] : $aboutExcerpt;
 
     $siteName = setting('site_name', 'CV. Jajar Wayang');
     $waLink = wa_href() ?? '#'; // wa.me dari setting `site_whatsapp` + auto-text sapaan umum
