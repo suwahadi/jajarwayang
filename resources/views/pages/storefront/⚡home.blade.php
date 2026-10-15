@@ -32,7 +32,7 @@ new #[Title('Beranda')] #[Layout('layouts::storefront')] class extends Component
     #[Computed]
     public function categories()
     {
-        return Category::query()->where('is_active', true)->withCount('products')->orderBy('name')->get();
+        return Category::query()->where('is_active', true)->withCount(['products' => fn ($q) => $q->active()])->orderBy('name')->get();
     }
 
     #[Computed]
